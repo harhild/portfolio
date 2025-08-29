@@ -1,0 +1,682 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* CSS Variables for Theming */
+:root {
+    --bg-color: #f4f4f9;
+    --text-color: #333;
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --gradient-start: #6a11cb;
+    --gradient-end: #2575fc;
+}
+
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --primary-color: #bb86fc;
+    --secondary-color: #b0bec5;
+    --card-bg: #1e1e1e;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    --gradient-start: #ff4e50;
+    --gradient-end: #f9d423;
+}
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+    cursor: none; /* Hide default cursor */
+}
+
+/* Custom Cursor */
+.cursor-dot,
+.cursor-outline {
+    pointer-events: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.2s;
+}
+
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary-color);
+}
+
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--primary-color);
+    transition: width 0.3s, height 0.3s, border-color 0.3s;
+}
+
+body:hover .cursor-dot,
+body:hover .cursor-outline {
+    opacity: 1;
+}
+
+/* Preloader */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: opacity 0.75s, visibility 0.75s;
+}
+
+.preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-text {
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 700;
+    animation: flicker 2s infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow:
+            0 0 4px #fff,
+            0 0 11px #fff,
+            0 0 19px #fff,
+            0 0 40px var(--primary-color),
+            0 0 80px var(--primary-color),
+            0 0 90px var(--primary-color),
+            0 0 100px var(--primary-color),
+            0 0 150px var(--primary-color);
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+    }
+}
+
+/* Header and Navigation */
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 1rem 5%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+/* Pseudo-element for link underline */
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* Theme Switcher */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch-wrapper i {
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: transform 0.3s ease;
+}
+.theme-switch-wrapper i:hover {
+    transform: scale(1.2);
+}
+.fa-sun { color: #f9d423; }
+.fa-moon { color: #444; } /* લાઇટ મોડમાં દેખાય તે માટે કલર બદલ્યો છે */
+/* Sections */
+/* Contact Section */
+.contact-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    position: relative; /* For pseudo-element positioning */
+    overflow: hidden; /* Clip the gradient which overflows the container */
+}
+/* --- Skill Tag Hover Details --- */
+.skill-tag {
+    position: relative; /* This is crucial for positioning the detail box */
+}
+
+.skill-detail {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 120%; /* Position it above the skill tag */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333; /* Dark background for the tooltip */
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    width: 220px;
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    z-index: 10;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    pointer-events: none; /* Prevents the tooltip from interfering with mouse events */
+}
+
+/* Arrow for the tooltip */
+.skill-detail::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.skill-tag:hover .skill-detail {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Styles for dark mode */
+body.dark-mode .skill-detail {
+    background-color: #f0f0f0;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .skill-detail::after {
+    border-color: #f0f0f0 transparent transparent transparent;
+}
+
+
+.contact-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Gradient Background using pseudo-element */
+.contact-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(106, 17, 203, 0.05), rgba(37, 117, 252, 0.05)); /* Light gradient */
+    z-index: -1; /* Behind the content */
+    animation: gradientAnimation 15s infinite alternate;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem; /* ભૂલનો મેસેજ બતાવવા માટે જગ્યા */
+}
+
+.contact-container input,
+.contact-container textarea {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.contact-container input.error,
+.contact-container textarea.error {
+    border-color: #e74c3c; /* ભૂલ માટે લાલ બોર્ડર */
+}
+.contact-container input:focus,
+.contact-container textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(var(--primary-color), 0.5);
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    position: absolute;
+    bottom: -22px;
+    left: 5px;
+}
+
+.contact-container button {
+    cursor: pointer;
+    align-self: center; /* બટનને વચ્ચે ગોઠવવા માટે */
+}
+
+.social-media {
+    text-align: center;
+    margin-top: 3rem;
+    border-top: 1px solid var(--secondary-color);
+    position: relative; /* For pseudo-element positioning */
+}
+
+.social-media::before {
+    content: '';
+    position: absolute;
+    top: -1.5rem; /* Adjust position to move line upwards */
+    width: 50px; /* Line width */
+    border-top: 2px solid var(--primary-color); /* Style of the line */
+    padding-top: 2rem;
+}
+
+.social-media p {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.social-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0; /* આઇકોનને દબાતા અટકાવવા માટે */
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    border: 2px solid var(--secondary-color);
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* બ્રાન્ડના કલર હોવર પર બતાવવા */
+.social-icon.linkedin:hover { background-color: #0077B5; border-color: #0077B5; }
+.social-icon.github:hover { background-color: #333; border-color: #333; }
+.social-icon.facebook:hover { background-color: #1DA1F2; border-color: #1DA1F2; }
+.social-icon.instagram:hover { background-color: #E4405F; border-color: #E4405F; }
+
+/* Hamburger Menu Icon (ડેસ્કટોપ પર છુપાયેલું) */
+#menu-icon {
+    display: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.content-section {
+    padding: 6rem 10%;
+    text-align: center;
+}
+.home-section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('https://www.transparenttextures.com/patterns/cubes.png');
+    background-color: var(--bg-color);
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+.hero-content p {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    display: inline-block;
+}
+.section-title::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 4px;
+    bottom: -10px;
+    left: 20%;
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+}
+
+/* About Section Layout */
+.about-container {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 2rem auto 0;
+    text-align: left;
+}
+
+.about-image {
+    flex-shrink: 0;
+}
+
+.about-image img {
+    width: 250px;  /* You can adjust this size */
+    height: 250px; /* Make sure width and height are the same */
+    object-fit: cover; /* This prevents the image from being stretched */
+    border-radius: 50%; /* This is the magic property that makes it a circle */
+    border: 5px solid var(--primary-color);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s;
+}
+
+.about-image img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+/* Responsive layout for About section */
+@media (max-width: 768px) {
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+}
+
+/* Multi-color Animated Button */
+.multi-color-btn {
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end), var(--gradient-start));
+    background-size: 200% auto;
+    transition: background-position 0.5s;
+    box-shadow: var(--shadow);
+}
+.multi-color-btn:hover {
+    background-position: right center;
+}
+
+/* Education Timeline */
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--primary-color);
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -2px;
+}
+.timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    width: 50%;
+}
+.timeline-item:nth-child(odd) { left: 0; text-align: right; }
+.timeline-item:nth-child(even) { left: 50%; text-align: left; }
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: var(--bg-color);
+    border: 4px solid var(--primary-color);
+    top: 20px;
+    border-radius: 50%;
+    z-index: 1;
+}
+.timeline-item:nth-child(odd)::after { right: -10px; }
+.timeline-item:nth-child(even)::after { left: -10px; }
+.timeline-item h3 { margin-bottom: 0.5rem; color: var(--primary-color); }
+.timeline-item .institution {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.timeline-item .year {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+/* Skills Section */
+.skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 2rem auto 0;
+}
+
+.skill-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    color: #fff;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s;
+}
+
+.skill-tag i {
+    font-size: 1.5rem;
+    /* This helps vertically align the icons perfectly */
+    line-height: 1;
+}
+
+.skill-tag:hover {
+    transform: scale(1.1);
+}
+
+/* Different colors for each skill tag */
+.skill-tag:nth-child(9n+1) { background-color: #F05138; } /* Swift */
+.skill-tag:nth-child(9n+2) { background-color: #7F52FF; } /* Kotlin */
+.skill-tag:nth-child(9n+3) { background-color: #f89820; } /* Java */
+.skill-tag:nth-child(9n+4) { background-color: #61DAFB; color: #20232A; } /* React Native */
+.skill-tag:nth-child(9n+5) { background-color: #027DFD; } /* Flutter */
+.skill-tag:nth-child(9n+6) { background-color: #FFCA28; color: #333; } /* Firebase */
+.skill-tag:nth-child(9n+7) { background-color: #F05033; } /* Git */
+.skill-tag:nth-child(9n+8) { background-color: #00A98F; } /* REST APIs */
+.skill-tag:nth-child(9n+9) { background-color: #FF3D81; } /* UI/UX */
+
+/* Project Cards */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+.project-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+/* Scroll Animation */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: var(--card-bg);
+    margin-top: 2rem;
+}
+
+/* --- Responsive Design (મોબાઇલ અને ટેબ્લેટ માટે) --- */
+@media (max-width: 920px) {
+    #menu-icon {
+        display: block; /* હેમબર્ગર આઇકોન બતાવો */
+        z-index: 1001;
+    }
+
+    nav ul {
+        position: absolute;
+        top: 0;
+        left: -100%; /* મેનુને સ્ક્રીનની બહાર રાખો */
+        width: 100%;
+        height: 100vh;
+        background: var(--bg-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        transition: left 0.4s ease-in-out;
+    }
+
+    nav ul.active {
+        left: 0; /* ક્લિક કરવા પર મેનુને સ્ક્રીનમાં લાવો */
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    /* એજ્યુકેશન ટાઇમલાઇનને વર્ટિકલ બનાવો */
+    .timeline::after {
+        left: 30px;
+    }
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 15px;
+    }
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        left: 0;
+        text-align: left;
+    }
+    .timeline-item::after,
+    .timeline-item:nth-child(odd)::after,
+    .timeline-item:nth-child(even)::after {
+        left: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+    .about-image img {
+        width: 200px;
+        height: 200px;
+    }
+}
